@@ -24,6 +24,39 @@ def authed():
     return session.get("ok") is True
 
 
+def get_info(url):
+    opts = {"quiet": True, "noplaylist": True}
+    with yt_dlp.YoutubeDL(opts) as y:
+        return y.extract_info(url, download=False)
+
+
+def fetch_photo(url, tmp):
+    d = get_info(url)
+    thumb = d.get("thumbnail")
+    if not thumb:
+        raise RuntimeError("no photo found")
+    ext = os.path.splitext(urlparse(thumb).path)[1] or ".jpg"
+    path = os.path.join(tmp, "cover" + ext)
+    urllib.request.urlretrieve(thumb, path)
+    return path
+
+
+def fetch_media(url, kind, tmp):
+    fmt = "bestaudio[ext=m4a]/bestaudio" if kind == "audio" else "b[ext=mp4]/b"
+    opts = {
+        "outtmpl": os.path.join(tmp, "%(title).80s.%(ext)s"),
+        "format": fmt,
+        "quiet": True,
+        "noplaylist": True,
+    }
+    with yt_dlp.YoutubeDL(opts) as y:
+        y.extract_info(url, download=True)
+    files = glob.glob(os.path.join(tmp, "*"))
+    if len(files) == 0:
+        raise RuntimeError("nothing was downloaded")
+    return files[0]
+
+
 @app.route("/")
 def index():
     return send_from_directory("static", "index.html")
@@ -60,8 +93,7 @@ def info():
     if not allowed(url):
         return jsonify(error="Please paste a YouTube or TikTok link."), 400
     try:
-        with yt_dlp.YoutubeDL({"quiet": True, "noplaylist": True}) as y:
-            d = y.extract_info(url, download=False)
+        d = get_info(url)
     except Exception as e:
         print("INFO ERROR:", e, flush=True)
         return jsonify(error="Couldn't read that link: " + str(e)[:200]), 400
@@ -83,27 +115,15 @@ def download():
         return jsonify(error="Unsupported link."), 400
     tmp = tempfile.mkdtemp(prefix="dl_")
     try:
-        if kind == "photo":
-            with yt_dlp.YoutubeDL({"quiet": True, "noplaylist": True}) as y:
-                d = y.extract_info(url, download=False)
-            thumb = d.get("thumbnail")
-            if not thumb:
-                raise RuntimeError("no photo")
-            ext = os.path.splitext(urlparse(thumb).path)[1] or ".jpg"
-            path = os.path.join(tmp, "cover" + ext)
-            urllib.request.urlretrieve(thumb, path)
-        else:
-            if kind == "audio":
-                fmt = "bestaudio[ext=m4a]/bestaudio"
-            else:
-                fmt = "b[ext=mp4]/b"
-            opts = {
-                "outtmpl": os.path.join(tmp, "%(title).80s.%(ext)s"),
-                "format": fmt,
-                "quiet": True,
-                "noplaylist": True,
-            }
-            with yt_dlp.YoutubeDL(opts) as y:
-                y.extract_info(url, download=True)
-            files = glob.glob(os.path.join(tmp, "*"))
-            if not files:
+        path = fetch_photo(url, tmp) if kind == "photo" else fetch_media(url, kind, tmp)
+        resp = send_file(path, as_attachment=True, download_name=os.path.basename(path))
+        resp.call_on_close(lambda: shutil.rmtree(tmp, ignore_errors=True))
+        return resp
+    except Exception as e:
+        print("DOWNLOAD ERROR:", e, flush=True)
+        shutil.rmtree(tmp, ignore_errors=True)
+        return jsonify(error="Download failed: " + str(e)[:200]), 500
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
