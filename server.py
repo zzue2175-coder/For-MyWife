@@ -5,8 +5,11 @@ import yt_dlp
 
 app = Flask(__name__, static_folder="static", static_url_path="/static")
 app.secret_key = os.environ.get("SECRET_KEY", "change-this-long-random-string")
-app.config.update(SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Lax",
-                  PERMANENT_SESSION_LIFETIME=60 * 60 * 24 * 30)
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    PERMANENT_SESSION_LIFETIME=60 * 60 * 24 * 30,
+)
 PASSWORD = os.environ.get("APP_PASSWORD", "169023")
 ALLOWED = ("youtube.com", "youtu.be", "tiktok.com")
 attempts = {}
@@ -59,12 +62,15 @@ def info():
     try:
         with yt_dlp.YoutubeDL({"quiet": True, "noplaylist": True}) as y:
             d = y.extract_info(url, download=False)
-    except Exception:
-        except Exception as e:
+    except Exception as e:
         print("INFO ERROR:", e, flush=True)
-        return jsonify(error="Couldn't read that link: " + str(e)[:160]), 400
-    return jsonify(title=d.get("title", "Untitled"), thumbnail=d.get("thumbnail"),
-                   uploader=d.get("uploader"), duration=d.get("duration"))
+        return jsonify(error="Couldn't read that link: " + str(e)[:200]), 400
+    return jsonify(
+        title=d.get("title", "Untitled"),
+        thumbnail=d.get("thumbnail"),
+        uploader=d.get("uploader"),
+        duration=d.get("duration"),
+    )
 
 
 @app.get("/api/download")
@@ -87,22 +93,17 @@ def download():
             path = os.path.join(tmp, "cover" + ext)
             urllib.request.urlretrieve(thumb, path)
         else:
-            fmt = "bestaudio[ext=m4a]/bestaudio" if kind == "audio" else "b[ext=mp4]/b"
-            opts = {"outtmpl": os.path.join(tmp, "%(title).80s.%(ext)s"), "format": fmt,
-                    "quiet": True, "noplaylist": True}
+            if kind == "audio":
+                fmt = "bestaudio[ext=m4a]/bestaudio"
+            else:
+                fmt = "b[ext=mp4]/b"
+            opts = {
+                "outtmpl": os.path.join(tmp, "%(title).80s.%(ext)s"),
+                "format": fmt,
+                "quiet": True,
+                "noplaylist": True,
+            }
             with yt_dlp.YoutubeDL(opts) as y:
                 y.extract_info(url, download=True)
             files = glob.glob(os.path.join(tmp, "*"))
             if not files:
-                raise RuntimeError("empty")
-            path = files[0]
-        resp = send_file(path, as_attachment=True, download_name=os.path.basename(path))
-        resp.call_on_close(lambda: shutil.rmtree(tmp, ignore_errors=True))
-        return resp
-    except Exception:
-        shutil.rmtree(tmp, ignore_errors=True)
-        return jsonify(error="That download didn't work. Try again in a moment."), 500
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
