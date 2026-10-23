@@ -1,93 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#F7D6DC">
 <title>For You</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,600&family=DM+Sans:wght@400;500&family=Noto+Serif+Myanmar:wght@400;600&family=Noto+Sans+Myanmar:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--blush:#FFF1F3;--petal:#F7D6DC;--rose:#D98A9B;--wine:#5B1A2E;--gold:#B8895A;--ink:#3A1220;
---serif:"Cormorant Garamond",Georgia,serif;--sans:"DM Sans",system-ui,sans-serif}
+:root{--a:#FFF1F3;--b:#F7D6DC;--ink:#3A1220;--accent:#5B1A2E;--rose:#D98A9B;--card:rgba(255,255,255,.7);--line:rgba(91,26,46,.16);--btn:#5B1A2E;--btn-ink:#fff;
+--serif:"Cormorant Garamond","Noto Serif Myanmar",Georgia,serif;--sans:"DM Sans","Noto Sans Myanmar",system-ui,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--a:#3A1524;--b:#1E0A13;--ink:#FBE6EA;--accent:#F3B8C4;--card:rgba(255,255,255,.07);--line:rgba(243,184,196,.22);--btn:#F3B8C4;--btn-ink:#3A1220;color-scheme:dark}}
+:root[data-theme="dark"]{--a:#3A1524;--b:#1E0A13;--ink:#FBE6EA;--accent:#F3B8C4;--card:rgba(255,255,255,.07);--line:rgba(243,184,196,.22);--btn:#F3B8C4;--btn-ink:#3A1220;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;min-height:100%}
-body{font-family:var(--sans);color:var(--ink);background:radial-gradient(120% 80% at 50% 0%,var(--blush),var(--petal));
-background-attachment:fixed;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
-.hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
-.hearts i{position:absolute;bottom:-40px;color:var(--rose);opacity:.35;font-style:normal;animation:rise linear infinite}
+body{margin:0;min-height:100vh;font-family:var(--sans);color:var(--ink);background:var(--b);background-image:radial-gradient(120% 80% at 50% 0%,var(--a),var(--b));background-attachment:fixed}
+.hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.hearts i{position:absolute;bottom:-40px;color:var(--rose);opacity:.3;font-style:normal;animation:rise linear infinite}
 @keyframes rise{to{transform:translateY(-115vh) rotate(25deg)}}
-@media (prefers-reduced-motion:reduce){.hearts i{animation:none;bottom:auto;top:20%}}
-main{position:relative;z-index:1;max-width:440px;margin:0 auto;padding:36px 22px 48px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
-h1{font-family:var(--serif);font-style:italic;font-weight:600;font-size:clamp(2.6rem,12vw,3.6rem);line-height:1;margin:0 0 10px;color:var(--wine);text-align:center}
-.sub{font-family:var(--serif);font-style:italic;font-size:1.25rem;text-align:center;margin:0 0 28px;color:var(--wine);opacity:.8}
-.hidden{display:none!important}
-.dots{display:flex;justify-content:center;gap:12px;margin-bottom:10px;height:34px}
+@media (prefers-reduced-motion:reduce){.hearts i{animation:none;bottom:auto;top:18%}}
+main{position:relative;max-width:440px;margin:0 auto;padding:40px 22px 56px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+h1{font-family:var(--serif);font-style:italic;font-weight:600;font-size:clamp(2.5rem,11vw,3.4rem);line-height:1.05;margin:0 0 12px;color:var(--accent);text-align:center}
+.sub{font-family:var(--serif);font-style:italic;font-size:1.25rem;text-align:center;margin:0 0 28px;opacity:.85}
+[hidden]{display:none!important}
+.dots{display:flex;justify-content:center;gap:12px;height:34px;margin-bottom:8px}
 .dots span{font-size:28px;color:var(--rose);opacity:.35;transition:transform .25s,opacity .25s}
-.dots span.on{opacity:1;transform:scale(1.15);color:var(--wine)}
+.dots span.on{opacity:1;transform:scale(1.15);color:var(--accent)}
 .dots.shake{animation:shake .4s}
 @keyframes shake{25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
-.msg{min-height:1.4em;text-align:center;font-size:.95rem;color:var(--wine);margin:0 0 18px}
+.msg{min-height:1.4em;text-align:center;font-size:.95rem;margin:0 0 16px}
 .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:300px;margin:0 auto}
-.pad button{aspect-ratio:1;border-radius:50%;border:1px solid rgba(91,26,46,.15);background:rgba(255,255,255,.65);
-font:500 1.6rem var(--serif);color:var(--wine);cursor:pointer;transition:background .15s,transform .1s}
-.pad button:active{background:var(--rose);color:#fff;transform:scale(.95)}
+.pad button{aspect-ratio:1;border-radius:50%;border:1px solid var(--line);background:var(--card);font:500 1.6rem var(--serif);color:var(--accent);cursor:pointer}
+.pad button:active{background:var(--rose);color:#fff}
 .pad .blank{visibility:hidden}
-.field{display:flex;flex-direction:column;gap:12px}
-input[type=url]{width:100%;padding:16px 18px;border-radius:18px;border:1px solid rgba(91,26,46,.2);background:rgba(255,255,255,.8);
-font:400 1rem var(--sans);color:var(--ink)}
-input::placeholder{color:#a46b78}
-.btn{padding:15px 18px;border:0;border-radius:999px;background:var(--wine);color:#fff;font:500 1rem var(--sans);cursor:pointer}
-.btn.soft{background:rgba(255,255,255,.75);color:var(--wine);border:1px solid rgba(91,26,46,.2)}
-.btn:disabled{opacity:.55}
-button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-.card{margin-top:24px;background:rgba(255,255,255,.7);border-radius:26px;padding:14px;border:1px solid rgba(91,26,46,.12)}
-.card img{width:100%;border-radius:18px;display:block;aspect-ratio:16/9;object-fit:cover;background:var(--petal)}
-.card h2{font-family:var(--serif);font-weight:500;font-size:1.35rem;line-height:1.2;margin:14px 4px 4px}
-.card p{margin:0 4px 14px;font-size:.9rem;opacity:.7}
-.actions{display:grid;gap:10px}
-.note{text-align:center;font-family:var(--serif);font-style:italic;font-size:1.1rem;margin-top:22px;color:var(--wine)}
-.err{color:#9b1c3b;text-align:center;margin-top:14px;min-height:1.2em;font-size:.95rem}
+button:focus-visible{outline:3px solid var(--rose);outline-offset:2px}
+.days{text-align:center;font-family:var(--serif);font-size:1.4rem;margin:-6px 0 26px;color:var(--accent)}
+.env{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:0;margin:0 0 14px;color:inherit;font:inherit;cursor:pointer;overflow:hidden}
+.env .top{display:flex;align-items:center;gap:14px;padding:18px 20px}
+.seal{flex:none;width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--btn-ink);display:grid;place-items:center;font-size:20px;transition:transform .4s}
+.env[aria-expanded="true"] .seal{transform:rotate(360deg) scale(.85);background:var(--rose)}
+.env .t{font-family:var(--serif);font-size:1.35rem;font-style:italic;line-height:1.15}
+.body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s ease}
+.env[aria-expanded="true"] .body{grid-template-rows:1fr}
+.body>div{overflow:hidden}
+.body p{margin:0;padding:2px 22px 22px;font-family:var(--serif);font-size:1.2rem;line-height:1.5}
+.btn{display:block;width:100%;margin-top:10px;padding:15px 18px;border:0;border-radius:999px;background:var(--btn);color:var(--btn-ink);font:500 1rem var(--sans);cursor:pointer}
+.note{min-height:4.5em;text-align:center;font-family:var(--serif);font-style:italic;font-size:1.3rem;line-height:1.4;margin:18px 0 0;color:var(--accent)}
+.foot{text-align:center;font-family:var(--serif);font-style:italic;font-size:1.1rem;margin-top:26px;opacity:.8}
+h1,.sub,.env .t,.note,.foot{font-style:normal}
+h1{line-height:1.45;font-weight:600}
+.sub{line-height:1.7;font-size:1.1rem}
+.env .t{line-height:1.6;font-size:1.15rem}
+.body p{line-height:1.95;font-size:1.05rem}
+.note{line-height:1.9;font-size:1.15rem;min-height:5.5em}
+.days{line-height:1.7;font-size:1.2rem}
 </style>
 </head>
 <body>
 <div class="hearts" id="hearts" aria-hidden="true"></div>
 <main>
   <section id="lock">
-    <h1>Just for you</h1>
-    <p class="sub">Whisper our secret number</p>
-    <div class="dots" id="dots" aria-label="Password progress"><span>♥</span><span>♥</span><span>♥</span><span>♥</span><span>♥</span><span>♥</span></div>
+    <h1>ဘေဘီအတွက်ပဲ</h1>
+    <p class="sub">ကိုကိုတို့နှစ်ယောက်ရဲ့ လျှို့ဝှက်နံပါတ်လေး ရိုက်ထည့်ပါနော်</p>
+    <div class="dots" id="dots"><span>♥</span><span>♥</span><span>♥</span><span>♥</span><span>♥</span><span>♥</span></div>
     <p class="msg" id="lockMsg" role="status"></p>
     <div class="pad" id="pad"></div>
   </section>
 
-  <section id="app" class="hidden">
-    <h1 id="hello">Hello, love</h1>
-    <p class="sub">Paste a link and I'll wrap it up for you</p>
-    <div class="field">
-      <input id="url" type="url" inputmode="url" placeholder="YouTube or TikTok link" autocomplete="off" aria-label="Video link">
-      <button class="btn" id="find">Find it</button>
-    </div>
-    <p class="err" id="err" role="alert"></p>
-    <div class="card hidden" id="card">
-      <img id="thumb" alt="">
-      <h2 id="title"></h2>
-      <p id="meta"></p>
-      <div class="actions">
-        <button class="btn" data-kind="video">Save video</button>
-        <button class="btn soft" data-kind="audio">Save sound only</button>
-        <button class="btn soft" data-kind="photo">Save cover photo</button>
-      </div>
-    </div>
-    <p class="note">Made with all my love</p>
+  <section id="home" hidden>
+    <h1>ဘေဘီအတွက်ပါ</h1>
+    <p class="sub">ကိုကိုတို့နှစ်ယောက်ပဲ သိတဲ့ နေရာလေးပါ။</p>
+    <p class="days" id="days" hidden></p>
+
+    <button class="env" aria-expanded="false"><div class="top"><span class="seal">♥</span><span class="t">ကိုကို့ကို လွမ်းတဲ့အခါ ဖွင့်ပါ</span></div>
+      <div class="body"><div><p>ဘေဘီရေ၊ ခဏလေး မျက်လုံးမှိတ်ကြည့်စမ်းပါ။ ကိုကိုလည်း အခုချိန် ဘေဘီကိုပဲ တွေးနေတာပါ။ ကိုကိုဘယ်နေရာရောက်နေပါစေ၊ ကိုကို့နှလုံးသားက ဘေဘီဆီကို လမ်းမမှားဘူးနော်။</p></div></div></button>
+    <button class="env" aria-expanded="false"><div class="top"><span class="seal">♥</span><span class="t">ပင်ပန်းနေတဲ့အခါ ဖွင့်ပါ</span></div>
+      <div class="body"><div><p>ဒီနေ့ တော်တော်ပင်ပန်းခဲ့တယ်မလား။ အရာရာကို ဖြည်းဖြည်းလေးနဲ့ ကိုင်တွယ်နေတာ ကိုကိုသိတယ်။ ဒီညတော့ အားလုံးကို ချထားလိုက်ပါ။ ကိုကိုရှိတယ်၊ ဘေဘီက အနားယူရုံပဲလုပ်ပါ။</p></div></div></button>
+    <button class="env" aria-expanded="false"><div class="top"><span class="seal">♥</span><span class="t">အိပ်မပျော်တဲ့ညမှာ ဖွင့်ပါ</span></div>
+      <div class="body"><div><p>အိပ်မပျော်ဘူးလား။ ဒါဆို ကိုကိုချစ်တဲ့ အရာလေးတွေကို ရေတွက်ကြည့်ပါ။ ဘေဘီရဲ့ အပြုံး၊ လက်ချောင်းလေးတွေ၊ ကိုကို့နာမည်ကို ခေါ်တဲ့အသံ။ ရေတွက်ရင်းနဲ့ အိပ်ပျော်သွားပါလိမ့်မယ်၊ ကိုကိုလည်း အိပ်မက်ထဲမှာ ဘေဘီကို တွေ့နေမှာပါ။</p></div></div></button>
+
+    <button class="btn" id="noteBtn">ချစ်စကားလေး တစ်ခု နှိပ်ကြည့်ပါ</button>
+    <p class="note" id="noteText" aria-live="polite"></p>
+    <p class="foot">ချစ်လျက်၊ ကိုကို</p>
   </section>
 </main>
-
 <script>
-const PARTNER_NAME = "Baby";
+const HASH = "eb1ec50cfaa360c60ebdff8741e52c6f3e87b1beb75ea0f5091d49feec5c7671";
+const START = "2023-09-16"; // anniversary as YYYY-MM-DD, e.g. "2022-02-14". Leave empty to hide the day counter.
+const NOTES = ["ဘေဘီရှိတဲ့နေရာက ကိုကို့အတွက် အိမ်ပါပဲ။","ဘေဘီနဲ့ဆို သာမန်နေ့တွေတောင် ထူးခြားသွားတယ်။","ဘဝအသစ် ပြန်စရရင်လည်း ဘေဘီကိုပဲ ပြန်ရွေးမှာပါ။","မနက်ထတာနဲ့ ပထမဆုံး တွေးမိတာ ဘေဘီပဲ။","ကိုကို့ကို ဒီလောက်ချစ်ပေးလို့ ကျေးဇူးတင်တယ်နော်။","ဘေဘီကို ချစ်ရတာ ကိုကို့ဘဝမှာ အလွယ်ဆုံးအရာပဲ။","ဘာပဲဖြစ်ဖြစ် ကိုကိုက ဘေဘီဘက်က အမြဲရှိနေမယ်။"];
 const $ = id => document.getElementById(id);
-let code = "";
+let code = "", ni = -1;
 
 (() => { const h = $("hearts");
   for (let i = 0; i < 12; i++) { const e = document.createElement("i"); e.textContent = "♥";
@@ -95,61 +98,36 @@ let code = "";
     e.style.animationDuration = (14 + Math.random()*14) + "s"; e.style.animationDelay = (-Math.random()*20) + "s"; h.appendChild(e); } })();
 
 ["1","2","3","4","5","6","7","8","9","","0","⌫"].forEach(k => {
-  const b = document.createElement("button"); b.textContent = k; b.type = "button";
-  if (!k) b.className = "blank"; else b.addEventListener("click", () => press(k));
-  b.setAttribute("aria-label", k === "⌫" ? "Delete" : k || "");
-  $("pad").appendChild(b);
-});
-addEventListener("keydown", e => { if ($("lock").classList.contains("hidden")) return;
+  const b = document.createElement("button"); b.type = "button"; b.textContent = k;
+  if (!k) b.className = "blank"; else b.onclick = () => press(k);
+  b.setAttribute("aria-label", k === "⌫" ? "Delete" : k || ""); $("pad").appendChild(b); });
+addEventListener("keydown", e => { if ($("lock").hidden) return;
   if (/^\d$/.test(e.key)) press(e.key); else if (e.key === "Backspace") press("⌫"); });
 
-function paint(){ [...$("dots").children].forEach((d,i)=>d.classList.toggle("on", i < code.length)); }
+function paint(){ [...$("dots").children].forEach((d,i) => d.classList.toggle("on", i < code.length)); }
+async function sha(s){ const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2,"0")).join(""); }
 async function press(k){
   if (k === "⌫") code = code.slice(0,-1); else if (code.length < 6) code += k;
   paint(); $("lockMsg").textContent = "";
   if (code.length < 6) return;
-  try {
-    const r = await fetch("/api/login", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({password:code})});
-    if (r.ok) return unlock();
-    const d = await r.json().catch(()=>({}));
-    $("lockMsg").textContent = r.status === 429 ? d.error : "That's not our number. Try again, my love.";
-  } catch { $("lockMsg").textContent = "Can't reach the server. Check your connection."; }
-  $("dots").classList.add("shake"); setTimeout(()=>$("dots").classList.remove("shake"),400);
+  let ok = false;
+  try { ok = (await sha(code)) === HASH; } catch { $("lockMsg").textContent = "ဒီ browser က နံပါတ်ကို မစစ်နိုင်ဘူး၊ Chrome ဒါမှမဟုတ် Safari နဲ့ ဖွင့်ကြည့်ပါ။"; }
+  if (ok) { try { localStorage.setItem("unlocked","1"); } catch {} return unlock(); }
+  if (!$("lockMsg").textContent) $("lockMsg").textContent = "ကိုကိုတို့နံပါတ် မဟုတ်သေးဘူးနော်၊ ပြန်ကြိုးစားကြည့်ပါဦး။";
+  $("dots").classList.add("shake"); setTimeout(() => $("dots").classList.remove("shake"), 400);
   code = ""; paint();
 }
-function unlock(){ $("lock").classList.add("hidden"); $("app").classList.remove("hidden");
-  if (PARTNER_NAME) $("hello").textContent = "Hello, " + PARTNER_NAME; }
-fetch("/api/me").then(r=>r.json()).then(d=>{ if (d.ok) unlock(); }).catch(()=>{});
+function unlock(){
+  $("lock").hidden = true; $("home").hidden = false;
+  const d = START ? Math.floor((Date.now() - new Date(START + "T00:00:00")) / 864e5) : NaN;
+  if (d >= 0) { $("days").textContent = "ချစ်သူဖြစ်ခဲ့တာ " + d.toLocaleString() + " ရက် ရှိပါပြီ"; $("days").hidden = false; }
+}
+try { if (localStorage.getItem("unlocked") === "1") unlock(); } catch {}
 
-async function post(path, body){ const r = await fetch(path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-  const d = await r.json().catch(()=>({})); if (!r.ok) { if (r.status===401) location.reload(); throw new Error(d.error||"Something went wrong."); } return d; }
-$("find").onclick = async () => {
-  const url = $("url").value.trim(); $("err").textContent = ""; $("card").classList.add("hidden");
-  if (!url) { $("err").textContent = "Paste a link first."; return; }
-  $("find").disabled = true; $("find").textContent = "Looking…";
-  try { const d = await post("/api/info",{url});
-    $("thumb").src = d.thumbnail || ""; $("title").textContent = d.title;
-    const m = d.duration ? Math.floor(d.duration/60)+":"+String(Math.floor(d.duration%60)).padStart(2,"0") : "";
-    $("meta").textContent = [d.uploader, m].filter(Boolean).join("  ·  ");
-    $("card").classList.remove("hidden");
-  } catch(e){ $("err").textContent = e.message; }
-  $("find").disabled = false; $("find").textContent = "Find it";
-};
-
-document.querySelectorAll("[data-kind]").forEach(btn => btn.onclick = async () => {
-  const label = btn.textContent; btn.disabled = true; btn.textContent = "Wrapping it up…"; $("err").textContent = "";
-  try {
-    const r = await fetch("/api/download?kind="+btn.dataset.kind+"&url="+encodeURIComponent($("url").value.trim()));
-    if (!r.ok) { const d = await r.json().catch(()=>({})); throw new Error(d.error||"Download failed."); }
-    const cd = r.headers.get("Content-Disposition")||""; const mt = /filename\*?=(?:UTF-8'')?"?([^";]+)/i.exec(cd);
-    const name = mt ? decodeURIComponent(mt[1]) : "saved-file";
-    const blob = await r.blob(); const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(()=>URL.revokeObjectURL(a.href), 60000);
-    btn.textContent = "Saved ♥";
-  } catch(e){ $("err").textContent = e.message; btn.textContent = label; }
-  setTimeout(()=>{ btn.disabled = false; btn.textContent = label; }, 2500);
-});
+document.querySelectorAll(".env").forEach(el => el.onclick = () =>
+  el.setAttribute("aria-expanded", el.getAttribute("aria-expanded") !== "true"));
+$("noteBtn").onclick = () => { let n; do { n = Math.floor(Math.random()*NOTES.length); } while (n === ni); ni = n; $("noteText").textContent = NOTES[n]; };
 </script>
 </body>
 </html>
