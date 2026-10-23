@@ -60,7 +60,9 @@ def info():
         with yt_dlp.YoutubeDL({"quiet": True, "noplaylist": True}) as y:
             d = y.extract_info(url, download=False)
     except Exception:
-        return jsonify(error="Couldn't read that link. Check it and try again."), 400
+        except Exception as e:
+        print("INFO ERROR:", e, flush=True)
+        return jsonify(error="Couldn't read that link: " + str(e)[:160]), 400
     return jsonify(title=d.get("title", "Untitled"), thumbnail=d.get("thumbnail"),
                    uploader=d.get("uploader"), duration=d.get("duration"))
 
